@@ -584,6 +584,12 @@ export function daoWrite(
 
     // Permissionless and idempotent from `ApprovedPendingDisbursement`: completes
     // an approved loan once the treasury can cover it (#540).
+    // Contract errors (contracts/dao/src/loans.rs, `disburse_approved_loan`):
+    //   NotInitialized (2) and Paused (6) from the init and pause guards,
+    //   ProposalNotFound (30) when no loan proposal has this id,
+    //   NotInVotingPhase (33) when the proposal is not ApprovedPendingDisbursement,
+    //   ExceedsTreasuryRatio (40) when the loan exceeds the allowed treasury share,
+    //   InsufficientTreasury (41) when the treasury cannot cover the amount yet.
     disburseApprovedLoan: (proposalId: number) =>
       send('disburse_approved_loan', { proposal_id: proposalId }),
 
